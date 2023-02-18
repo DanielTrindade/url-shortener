@@ -15,7 +15,7 @@ const generateShortUrl = async (req, res) => {
     if (existingUrl) {
       res.status(200).json({ shortUrl: existingUrl.shortUrl });
     } else {
-      const shortUrl = `https://${process.env.SHORT_URL_PREFIX}.${shortUrlCode}`;
+      const shortUrl = `https://${process.env.SHORT_URL_PREFIX}/${shortUrlCode}`;
       ShortUrl.createShortUrl(longUrl, shortUrlCode, shortUrl);
       res.status(200).json({ shortUrl });
     }
