@@ -1,9 +1,7 @@
 const request = require('supertest');
 const app = require('../app');
-const ShortUrl = require('../models/ShortUrl');
 
 describe('Short URL API', () => {
-    
 
     describe('POST /shorten', () => {
 
@@ -37,8 +35,6 @@ describe('Short URL API', () => {
             expect(response.status).toBe(200);
             expect(response.body.shortUrl).toBe(existingShortUrl);
         });
-
-
     });
 
     describe('GET /:shortUrlCode', () => {
