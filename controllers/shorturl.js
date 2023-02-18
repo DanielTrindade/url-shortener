@@ -1,7 +1,9 @@
-const ShortUrl = require("../models/shorturl");
-const { nanoid }  = require("nanoid");
+const ShortUrl = require("../dao/shorturl.js");
+const { nanoid } = require("nanoid");
 const validateUrl = require("../utils/util.js");
-require("dotenv").config({ path: "./config/.env"});
+
+require("dotenv").config({ path: "./config/.env" });
+
 const generateShortUrl = async (req, res) => {
   const { longUrl } = req.body;
   const shortUrlCode = nanoid(11);
@@ -11,17 +13,10 @@ const generateShortUrl = async (req, res) => {
   try {
     const existingUrl = await ShortUrl.findOne({ longUrl });
     if (existingUrl) {
-      res.status(409).json({ shortUrl: existingUrl.shortUrl });
+      res.status(200).json({ shortUrl: existingUrl.shortUrl });
     } else {
       const shortUrl = `https://${process.env.SHORT_URL_PREFIX}.${shortUrlCode}`;
-      const newUrl = new ShortUrl({
-        longUrl,
-        shortUrl,
-        shortUrlCode,
-        createdAt: new Date(),
-        expiry: new Date(Date.now() + 24 * 60 * 60 * 1000),
-      });
-      await newUrl.save();
+      ShortUrl.createShortUrl(longUrl, shortUrlCode, shortUrl);
       res.status(200).json({ shortUrl });
     }
   } catch (err) {
